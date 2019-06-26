@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const pokemonRouter = require("./routes/pokemons");
+require("./utils/db");
 
 app.use(express.json());
 app.use("/pokemons/", pokemonRouter);
