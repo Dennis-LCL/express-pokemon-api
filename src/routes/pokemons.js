@@ -33,7 +33,7 @@ pokemonRouter.get("/:id", async (req, res, next) => {
   isPokemonFound = foundPokemon.length !== 0 ? true : false;
   return isPokemonFound
     ? res.status(200).send(foundPokemon)
-    : res.status(404).send("No pokemon caught yet.");
+    : res.status(404).send("You haven't caught this one yet.");
 });
 
 module.exports = pokemonRouter;

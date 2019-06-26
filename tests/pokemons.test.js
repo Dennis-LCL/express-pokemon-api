@@ -95,7 +95,7 @@ describe("routes/pokemons", () => {
     const id = pokemonData[0].id;
     const response = await request(app).get(`/pokemons/${id}`);
     expect(response.status).toEqual(404);
-    expect(response.text).toEqual("No pokemon caught yet.");
+    expect(response.text).toEqual("You haven't caught this one yet.");
   });
 });
 
