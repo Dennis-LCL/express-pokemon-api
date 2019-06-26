@@ -29,10 +29,11 @@ describe("routes/pokemons", () => {
 
   beforeEach(async () => {
     await db.dropDatabase();
+    await db.collection("pokemons").insertMany(pokemonData);
   });
 
-  it("POST /pokemons should return one newly created Pokemon.", async () => {
-    const newPokemon = pokemonData[0];
+  it("POST /pokemons should return the newly created Pokemon.", async () => {
+    const newPokemon = preciousPokemon;
     const response = await request(app)
       .post("/pokemons")
       .send(newPokemon)
@@ -45,7 +46,6 @@ describe("routes/pokemons", () => {
   it("POST /pokemons should persist one newly created Pokemon in database.", async () => {
     // Request POST API to insert a new Pokemon into Pokedex database.
     const newPokemon = preciousPokemon;
-
     const response = await request(app)
       .post("/pokemons")
       .send(newPokemon)
@@ -56,15 +56,13 @@ describe("routes/pokemons", () => {
     const pokemons = db.collection("pokemons");
     const insertedPokemon = await pokemons.findOne({ id: 7 });
     console.log("From DB: ", insertedPokemon);
-    delete newPokemon._id;
     expect(insertedPokemon).toMatchObject(newPokemon);
   });
 
-  it("POST /pokemons should return all newly created Pokemons.", async () => {
-    const newPokemons = pokemonData[0];
+  it.skip("GET /pokemons should return all Pokemons.", async () => {
+    const newPokemons = pokemonData;
     const response = await request(app)
-      .post("/pokemons")
-      .send(newPokemons)
+      .get("/pokemons")
       .set("Content-Type", "application/json");
 
     expect(response.status).toEqual(200);
@@ -87,6 +85,5 @@ const preciousPokemon = {
     Speed: 43
   },
   type: ["Water"],
-  _id: "5cfe022f42b1786675d67e79",
   id: 7
 };

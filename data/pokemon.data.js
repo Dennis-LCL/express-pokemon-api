@@ -14,7 +14,6 @@ module.exports = [
       Speed: 100
     },
     type: ["Fire", "Flying"],
-    _id: "5cfe022f42b1786675d67e7b",
     id: 6
   },
   {
@@ -32,7 +31,6 @@ module.exports = [
       Speed: 45
     },
     type: ["Bug"],
-    _id: "5cfe022f42b1786675d67e7d",
     id: 10
   },
   {
@@ -50,7 +48,6 @@ module.exports = [
       Speed: 30
     },
     type: ["Bug"],
-    _id: "5cfe022f42b1786675d67e7e",
     id: 11
   }
 ];
