@@ -5,6 +5,21 @@ const mongoose = require("mongoose");
 require("../models/pokemon.model");
 const PokemonModel = mongoose.model("Pokemon");
 
+// Database CRUD functions
+const findOnePokemon = async pokemonId => {
+  const foundPokemon = await PokemonModel.find(
+    { id: pokemonId },
+    (err, pokemon) => {}
+  );
+  isPokemonFound = foundPokemon.length !== 0 ? true : false;
+  if (isPokemonFound) {
+    return foundPokemon;
+  } else {
+    throw new Error("You haven't caught this one yet.");
+  }
+};
+
+// Router Middleware
 pokemonRouter.post("/", async (req, res, next) => {
   try {
     const newPokemon = req.body;
@@ -25,15 +40,17 @@ pokemonRouter.get("/", async (req, res, next) => {
 
 pokemonRouter.get("/:id", async (req, res, next) => {
   pokemonId = Number(req.params.id);
-  const foundPokemon = await PokemonModel.find(
-    { id: pokemonId },
-    (err, pokemon) => err && next(err)
-  );
-  console.log(foundPokemon);
-  isPokemonFound = foundPokemon.length !== 0 ? true : false;
-  return isPokemonFound
-    ? res.status(200).send(foundPokemon)
-    : res.status(404).send("You haven't caught this one yet.");
+  try {
+    const foundPokemon = await findOnePokemon(pokemonId);
+    console.log(foundPokemon);
+    res.status(200).send(foundPokemon);
+  } catch (err) {
+    next(err);
+  }
+});
+
+pokemonRouter.use((err, req, res, next) => {
+  res.status(404).send(err.message);
 });
 
 module.exports = pokemonRouter;
