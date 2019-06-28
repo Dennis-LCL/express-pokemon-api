@@ -97,6 +97,39 @@ describe("routes/pokemons", () => {
     expect(response.status).toEqual(404);
     expect(response.text).toEqual("You haven't caught this one yet.");
   });
+
+  it("PUT /pokemons/:id should find and update the pokemon.", async () => {
+    await insertPokemons();
+    const id = pokemonData[0].id;
+    const response = await request(app)
+      .put(`/pokemons/${id}`)
+      .send(updatedPokemon);
+    response.body.map(pokemon => {
+      delete pokemon._id;
+      delete pokemon.__v;
+      return;
+    });
+    expect(response.status).toEqual(200);
+    expect(...response.body).toMatchObject(updatedPokemon);
+  });
+
+  it("PUT /pokemons/:id should return message if pokemon is not found.", async () => {
+    const id = pokemonData[0].id;
+    const response = await request(app)
+      .put(`/pokemons/${id}`)
+      .send(updatedPokemon);
+    expect(response.status).toEqual(404);
+    expect(response.text).toEqual("You haven't caught this one yet.");
+  });
+
+  it("DELETE /pokemons/:id should find and delete the pokemon from database.", async () => {
+    await insertPokemons();
+    const id = pokemonData[0].id;
+    await request(app).delete(`/pokemons/${id}`);
+    const response = await request(app).get(`/pokemons/${id}`);
+    expect(response.status).toEqual(404);
+    expect(response.text).toEqual("You haven't caught this one yet.");
+  });
 });
 
 const insertPokemons = async () => {
@@ -126,4 +159,22 @@ const preciousPokemon = {
   },
   type: ["Water"],
   id: 7
+};
+
+const updatedPokemon = {
+  name: {
+    english: "Charizard",
+    japanese: "リザードン",
+    chinese: "喷火龙"
+  },
+  base: {
+    HP: 999,
+    Attack: 999,
+    Defence: 999,
+    SpAttack: 999,
+    SpDefence: 999,
+    Speed: 999
+  },
+  type: ["Eating", "Sleeping", "Farting"],
+  id: 6
 };

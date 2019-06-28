@@ -42,8 +42,37 @@ pokemonRouter.get("/:id", async (req, res, next) => {
   pokemonId = Number(req.params.id);
   try {
     const foundPokemon = await findOnePokemon(pokemonId);
-    console.log(foundPokemon);
     res.status(200).send(foundPokemon);
+  } catch (err) {
+    next(err);
+  }
+});
+
+pokemonRouter.put("/:id", async (req, res, next) => {
+  pokemonId = Number(req.params.id);
+  pokemonData = req.body;
+  try {
+    await PokemonModel.findOneAndUpdate(
+      { id: pokemonId },
+      pokemonData,
+      (err, pokemon) => {}
+    );
+    const updatedPokemon = await findOnePokemon(pokemonId);
+    res.status(200).send(updatedPokemon);
+  } catch (err) {
+    next(err);
+  }
+});
+
+pokemonRouter.delete("/:id", async (req, res, next) => {
+  pokemonId = Number(req.params.id);
+  pokemonData = req.body;
+  try {
+    await PokemonModel.findOneAndRemove(
+      { id: pokemonId },
+      (err, pokemon) => {}
+    );
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }
